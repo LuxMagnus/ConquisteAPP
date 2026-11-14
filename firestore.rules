@@ -1,0 +1,55 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Default deny all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidUserProfile(data) {
+      return data.id is string
+        && data.id == request.auth.uid
+        && data.email is string
+        && data.email.size() <= 150
+        && (!('displayName' in data) || (data.displayName is string && data.displayName.size() <= 120))
+        && (!('photoURL' in data) || (data.photoURL is string && data.photoURL.size() <= 1000));
+    }
+
+    function isValidStudyState(data) {
+      return data.userId is string
+        && data.userId == request.auth.uid
+        && data.data is map;
+    }
+
+    // Perfil do usuário
+    match /users/{userId} {
+      allow get: if isValidId(userId) && isOwner(userId);
+      allow create: if isValidId(userId) && isOwner(userId) && isValidUserProfile(request.resource.data);
+      allow update: if isValidId(userId) && isOwner(userId) && isValidUserProfile(request.resource.data)
+        && request.resource.data.id == resource.data.id;
+      allow delete: if isValidId(userId) && isOwner(userId);
+
+      // Estado dos estudos sincronizado
+      match /study/{docId} {
+        allow get, list: if isValidId(userId) && isOwner(userId);
+        allow create: if isValidId(userId) && isOwner(userId) && isValidStudyState(request.resource.data);
+        allow update: if isValidId(userId) && isOwner(userId) && isValidStudyState(request.resource.data)
+          && request.resource.data.userId == resource.data.userId;
+        allow delete: if isValidId(userId) && isOwner(userId);
+      }
+    }
+  }
+}

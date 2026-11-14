@@ -1,0 +1,6 @@
+{
+  "name": "Conquiste - Gestão de Estudos para Concursos",
+  "description": "App web de gestão e planejamento de estudos para concursos públicos com ciclos, cronômetro e revisões inteligentes.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

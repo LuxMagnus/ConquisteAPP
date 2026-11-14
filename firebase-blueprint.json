@@ -1,0 +1,39 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Perfil público e dados básicos da conta do estudante",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "ID do usuário (UID do Firebase Auth)" },
+        "email": { "type": "string", "format": "email", "description": "E-mail do usuário" },
+        "displayName": { "type": "string", "description": "Nome de exibição" },
+        "photoURL": { "type": "string", "description": "Foto de perfil do Google" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Data de criação da conta" },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Data da última atualização" }
+      },
+      "required": ["id", "email", "createdAt"]
+    },
+    "StudyState": {
+      "title": "StudyState",
+      "description": "Estado completo de estudos do usuário sincronizado entre dispositivos (provas, matérias, tópicos, sessões, revisões, ciclos e temporizador ativo cross-device com resiliência contra descarregamento)",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "UID do usuário proprietário dos dados" },
+        "data": { "type": "object", "description": "Estrutura unificada contendo provas, disciplinas, tópicos, sessões, revisões, ciclos e configurações" },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Timestamp ISO da última modificação" }
+      },
+      "required": ["userId", "data"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "Documento de perfil do usuário autenticado"
+    },
+    "/users/{userId}/study/{docId}": {
+      "schema": "StudyState",
+      "description": "Estado dos estudos sincronizado em tempo real entre navegadores e dispositivos"
+    }
+  }
+}

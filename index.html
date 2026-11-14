@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <script>
+      (function() {
+        // Garantir que window.fetch tenha getter e setter configuráveis para extensões de navegador
+        try {
+          var originalFetch = window.fetch ? window.fetch.bind(window) : null;
+          var activeFetch = originalFetch;
+          Object.defineProperty(window, 'fetch', {
+            get: function() {
+              return activeFetch;
+            },
+            set: function(val) {
+              activeFetch = val;
+            },
+            configurable: true,
+            enumerable: true,
+          });
+        } catch (e) {}
+
+        // Evitar que erros de extensões do Chrome (chrome-extension://) quebrem a aplicação
+        window.addEventListener('error', function(event) {
+          if (event && event.filename && event.filename.indexOf('chrome-extension://') !== -1) {
+            event.preventDefault();
+            event.stopPropagation();
+            return false;
+          }
+        }, true);
+      })();
+    </script>
+    <title>Conquiste - Gestão de Estudos para Concursos</title>
+    <meta name="description" content="App web de gestão e planejamento de estudos para concursos públicos com ciclos, cronômetro e revisões inteligentes." />
+    <meta property="og:title" content="Conquiste - Gestão de Estudos para Concursos" />
+    <meta property="og:description" content="App web de gestão e planejamento de estudos para concursos públicos com ciclos, cronômetro e revisões inteligentes." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="theme-color" content="#0d1527" />
+    <link rel="icon" type="image/png" href="/assets/aistudio/Icone_afd7a14f.png" />
+    <link rel="apple-touch-icon" href="/assets/aistudio/Icone_afd7a14f.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  </head>
+  <body class="bg-[#0b1120] text-slate-100 antialiased selection:bg-blue-500 selection:text-white">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+
