@@ -191,7 +191,7 @@ export function exportBackup(state) {
     const a = document.createElement('a');
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
     a.href = url;
-    a.download = `estudaqui-backup-${timestamp}.json`;
+    a.download = `conquiste-backup-${timestamp}.json`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);

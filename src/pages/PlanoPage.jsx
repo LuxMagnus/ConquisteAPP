@@ -312,7 +312,7 @@ export function PlanoPage({ onSwitchToTimer }) {
               {/* Card do Gráfico de Rosca */}
               <Card className="bg-gradient-to-br from-[#121c33] to-[#0f172a] border-[#1f2f54] shadow-xl">
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
-                  <div>
+                  <div className="min-w-0">
                     <CardTitle className="text-base sm:text-lg flex items-center gap-2">
                       <span>Ciclo de Estudos — Volta {cicloAtivo?.voltaAtual || 1}</span>
                     </CardTitle>
@@ -321,7 +321,7 @@ export function PlanoPage({ onSwitchToTimer }) {
                     </CardDescription>
                   </div>
 
-                  <span className="text-xs font-mono font-bold px-3 py-1 rounded-xl bg-blue-600/20 text-blue-300 border border-blue-500/30">
+                  <span className="shrink-0 whitespace-nowrap self-start text-xs font-mono font-bold px-3 py-1 rounded-xl bg-blue-600/20 text-blue-300 border border-blue-500/30">
                     {progressoCiclo.percentual}% da volta
                   </span>
                 </CardHeader>

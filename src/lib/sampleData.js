@@ -1,5 +1,5 @@
 /**
- * Gerador de dados de exemplo para demonstração e testes do Estudaqui.
+ * Gerador de dados de exemplo para demonstração e testes do Conquiste.
  * Popula exatamente 1 prova modelo, 4 disciplinas com cores da paleta,
  * tópicos estruturados, sessões de estudo com questões e revisões programadas.
  */

@@ -105,7 +105,7 @@ export function MetasSemanaisCard({ onEditarProva, onNovaProva }) {
                   </select>
                 </div>
               )}
-              <h2 className="text-lg sm:text-xl font-extrabold text-white tracking-tight truncate">
+              <h2 className="text-lg sm:text-xl font-extrabold text-white tracking-tight line-clamp-2 break-words">
                 {provaAtiva.nome}
               </h2>
             </div>
@@ -117,9 +117,9 @@ export function MetasSemanaisCard({ onEditarProva, onNovaProva }) {
         </div>
 
         {/* Contagem Regressiva e Botões */}
-        <div className="w-full">
+        <div className="w-full md:w-auto md:shrink-0">
           {/* Badge de Contagem Regressiva em Dias */}
-          <div className="px-3.5 py-3 rounded-xl bg-[#0b1222] border border-[#1e2f52] flex items-center gap-2">
+          <div className="px-3.5 py-3 rounded-xl bg-[#0b1222] border border-[#1e2f52] flex items-center justify-between md:justify-start gap-3 whitespace-nowrap">
             <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
               Contagem Regressiva
             </span>

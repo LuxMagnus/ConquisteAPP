@@ -1,0 +1,20 @@
+{
+  "id": "/",
+  "name": "Conquiste - Gestão de Estudos para Concursos",
+  "short_name": "Conquiste",
+  "description": "App web de gestão e planejamento de estudos para concursos públicos com ciclos, cronômetro e revisões inteligentes.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "theme_color": "#0d1527",
+  "background_color": "#0b1120",
+  "lang": "pt-BR",
+  "icons": [
+    {
+      "src": "/assets/aistudio/Icone_afd7a14f.png",
+      "sizes": "640x640",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

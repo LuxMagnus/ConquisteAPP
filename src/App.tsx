@@ -84,8 +84,8 @@ function MainApp() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0b1120] text-slate-100 flex flex-col md:flex-row antialiased">
-      {/* Sidebar Lateral para Desktop (>= 768px) */}
+    <div className="min-h-screen bg-[#0b1120] text-slate-100 flex flex-col lg:flex-row antialiased">
+      {/* Sidebar Lateral para Desktop e tablet deitado (>= 1024px) */}
       <Sidebar
         currentTab={currentTab}
         onChangeTab={setCurrentTab}
@@ -94,7 +94,7 @@ function MainApp() {
       />
 
       {/* Conteúdo Principal */}
-      <div className="flex-1 flex flex-col min-w-0 pb-28 md:pb-12">
+      <div className="flex-1 flex flex-col min-w-0 pb-28 lg:pb-12">
         {/* Top Header */}
         <Header
           onOpenSettings={() => setIsSettingsOpen(true)}
@@ -135,7 +135,7 @@ function MainApp() {
         />
       )}
 
-      {/* Navegação Inferior Mobile (< 768px) */}
+      {/* Navegação Inferior Mobile e tablet em pé (< 1024px) */}
       <BottomNav
         currentTab={currentTab}
         onChangeTab={setCurrentTab}
@@ -156,7 +156,7 @@ function MainApp() {
         onClose={() => setIsSettingsOpen(false)}
       />
 
-      {/* Modal Global de Assinatura & 60 Dias Grátis */}
+      {/* Modal Global de Assinatura & 14 Dias Grátis */}
       <AssinaturaModal
         isOpen={isAssinaturaOpen}
         onClose={() => setIsAssinaturaOpen(false)}

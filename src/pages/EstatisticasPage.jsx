@@ -247,12 +247,12 @@ export function EstatisticasPage() {
         {temSessoes && (
           <div className="flex flex-wrap items-center gap-2.5 pt-2">
             {/* Seletor de Período Temporal */}
-            <div className="flex items-center gap-1.5 bg-[#121c33] px-2.5 py-1.5 rounded-xl border border-[#1d2c4c]">
+            <div className="flex items-center gap-1.5 bg-[#121c33] px-2.5 py-1.5 rounded-xl border border-[#1d2c4c] w-full sm:w-auto">
               <Calendar className="w-3.5 h-3.5 text-blue-400 shrink-0" />
               <select
                 value={filtroPeriodo}
                 onChange={(e) => setFiltroPeriodo(e.target.value)}
-                className="bg-transparent text-xs font-semibold text-slate-200 focus:outline-none cursor-pointer pr-1"
+                className="w-full sm:w-auto bg-transparent text-xs font-semibold text-slate-200 focus:outline-none cursor-pointer pr-1"
                 aria-label="Filtrar por período temporal"
               >
                 <option value="tudo" className="bg-[#0b1120] text-white">Todo o Histórico</option>
@@ -287,7 +287,7 @@ export function EstatisticasPage() {
             )}
 
             {/* Filtro por Disciplina */}
-            <div className="flex items-center gap-1.5 bg-[#121c33] px-2.5 py-1.5 rounded-xl border border-[#1d2c4c] max-w-xs">
+            <div className="flex items-center gap-1.5 bg-[#121c33] px-2.5 py-1.5 rounded-xl border border-[#1d2c4c] w-full sm:w-auto sm:max-w-xs">
               <Filter className="w-3.5 h-3.5 text-slate-400 shrink-0" />
               <select
                 value={filtroDisciplinaId}
@@ -326,11 +326,11 @@ export function EstatisticasPage() {
             </div>
             
             {/* Filtro Acertos no Chute */}
-            <div className="flex items-center gap-1.5 bg-[#121c33] px-3 py-1.5 rounded-xl border border-[#1d2c4c]">
+            <div className="flex items-center gap-1.5 bg-[#121c33] px-3 py-1.5 rounded-xl border border-[#1d2c4c] w-full sm:w-auto">
               <select
                 value={filtroChutes}
                 onChange={(e) => setFiltroChutes(e.target.value)}
-                className="bg-transparent text-[11px] font-semibold text-slate-300 focus:outline-none cursor-pointer pr-1"
+                className="w-full sm:w-auto bg-transparent text-[11px] font-semibold text-slate-300 focus:outline-none cursor-pointer pr-1"
                 aria-label="Filtrar acertos no chute"
               >
                 <option value="nenhum">Considerar todos acertos</option>

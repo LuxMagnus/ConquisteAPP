@@ -22,6 +22,9 @@ export const PLANOS_ASSINATURA = [
     sku: 'conquiste_mensal_14',
     nome: 'Mensal',
     precoTotal: 'R$ 14,00',
+    precoOriginal: null,
+    descontoPct: null,
+    economiaValor: null,
     valorNumerico: 14.0,
     equivalenteMes: 'R$ 14,00 / mês',
     cobrancaInfo: 'Cobrado mensalmente',
@@ -33,6 +36,9 @@ export const PLANOS_ASSINATURA = [
     sku: 'conquiste_trimestral_32',
     nome: 'Trimestral',
     precoTotal: 'R$ 32,00',
+    precoOriginal: 'R$ 42',
+    descontoPct: 24,
+    economiaValor: 'R$ 10',
     valorNumerico: 32.0,
     equivalenteMes: 'R$ 10,67 / mês',
     cobrancaInfo: 'Cobrado a cada 3 meses',
@@ -44,6 +50,9 @@ export const PLANOS_ASSINATURA = [
     sku: 'conquiste_anual_97',
     nome: 'Anual',
     precoTotal: 'R$ 97,00',
+    precoOriginal: 'R$ 168',
+    descontoPct: 42,
+    economiaValor: 'R$ 71',
     valorNumerico: 97.0,
     equivalenteMes: 'R$ 8,08 / mês',
     cobrancaInfo: 'Cobrado anualmente',
@@ -123,9 +132,9 @@ export function AssinaturaModal({ isOpen, onClose, onOpenTermos }) {
       onClose={onClose}
       title=""
       description=""
-      maxWidth="max-w-xl"
+      maxWidth="max-w-2xl"
     >
-      <div className="space-y-5 -mt-3">
+      <div className="space-y-5 pt-8">
         {/* Banner Hero do Trial de 14 dias */}
         <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-900/60 via-indigo-950/70 to-[#0d1629] border border-blue-500/40 p-5 text-center shadow-lg">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/20 border border-blue-400/40 text-blue-300 text-xs font-bold uppercase tracking-wider mb-2.5">
@@ -209,9 +218,48 @@ export function AssinaturaModal({ isOpen, onClose, onOpenTermos }) {
                       </div>
                     </div>
 
-                    <div className="mt-2">
-                      <span className="text-lg font-black text-white">{plano.precoTotal}</span>
-                      <p className="text-[10px] text-blue-300 font-semibold">{plano.equivalenteMes}</p>
+                    <div className="mt-2.5 space-y-1">
+                      {plano.precoOriginal ? (
+                        <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-lg bg-rose-500/10 border border-rose-500/25">
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                            De
+                          </span>
+                          <span className="text-sm font-extrabold font-mono text-rose-400 line-through decoration-rose-500 decoration-2 whitespace-nowrap">
+                            {plano.precoOriginal}
+                          </span>
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-400">
+                            por
+                          </span>
+                        </div>
+                      ) : (
+                        <div className="hidden sm:flex items-center h-[24px]">
+                          <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">
+                            Plano padrão
+                          </span>
+                        </div>
+                      )}
+
+                      <div className="flex items-baseline gap-2 flex-wrap pt-0.5">
+                        <span className="text-2xl font-black text-white tracking-tight leading-none">
+                          {plano.precoTotal}
+                        </span>
+                        {plano.descontoPct && (
+                          <span className="text-[11px] font-black font-mono px-1.5 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+                            -{plano.descontoPct}%
+                          </span>
+                        )}
+                      </div>
+
+                      <div className="flex items-center justify-between gap-2 pt-0.5">
+                        <p className="text-[11px] text-blue-300 font-semibold">
+                          {plano.equivalenteMes}
+                        </p>
+                        {plano.economiaValor && (
+                          <span className="text-[10px] font-bold text-emerald-400 whitespace-nowrap">
+                            Poupa {plano.economiaValor}
+                          </span>
+                        )}
+                      </div>
                     </div>
                   </div>
 

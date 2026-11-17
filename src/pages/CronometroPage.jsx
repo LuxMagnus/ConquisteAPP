@@ -64,7 +64,7 @@ export function CronometroPage({ prefilledConfig, onClearPrefilled }) {
   const [tipoEstudo, setTipoEstudo] = useState('teoria');
   // Memoriza preferência de modo do usuário: padrão modo livre (vinculado ao ciclo)
   const [modoEstudo, setModoEstudo] = useState(() => {
-    return localStorage.getItem('estudaqui_timer_mode') || 'livre';
+    return localStorage.getItem('conquiste_timer_mode') || 'livre';
   });
   const [duracaoBloco, setDuracaoBloco] = useState(25); // minutos
   const [duracaoCustomizada, setDuracaoCustomizada] = useState('');
@@ -73,7 +73,7 @@ export function CronometroPage({ prefilledConfig, onClearPrefilled }) {
   function handleMudarModo(novoModo) {
     setModoEstudo(novoModo);
     try {
-      localStorage.setItem('estudaqui_timer_mode', novoModo);
+      localStorage.setItem('conquiste_timer_mode', novoModo);
     } catch (e) {
       // Ignora erro de storage
     }
@@ -711,7 +711,7 @@ export function CronometroPage({ prefilledConfig, onClearPrefilled }) {
                 </svg>
 
                 {/* Conteúdo Central do Relógio */}
-                <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none px-4">
+                <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none px-8">
                   {/* Tempo Principal */}
                   <span className="font-mono text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-wider drop-shadow-md">
                     {!sessaoAtiva
@@ -724,7 +724,7 @@ export function CronometroPage({ prefilledConfig, onClearPrefilled }) {
                   </span>
 
                   {/* Legenda do Timer e Status do Ciclo */}
-                  <p className="text-[11px] uppercase tracking-widest font-semibold mt-1 text-slate-400">
+                  <p className="text-[10px] sm:text-[11px] uppercase tracking-wider sm:tracking-widest font-semibold mt-1 text-slate-400 text-center">
                     {!sessaoAtiva
                       ? modoEstudo === 'livre'
                         ? 'Modo Livre (Ciclo)'
@@ -745,8 +745,9 @@ export function CronometroPage({ prefilledConfig, onClearPrefilled }) {
                   )}
 
                   {blocoCicloAtual && (
-                    <span className="text-[10px] text-slate-400/90 mt-1 font-mono">
-                      Meta do ciclo: {minutosMetaCiclo}m • Total volta: {Math.round(segundosEstudadosTotal / 60)}m
+                    <span className="text-[10px] text-slate-400/90 mt-1 font-mono text-center leading-snug">
+                      <span className="block whitespace-nowrap">Meta do ciclo: {minutosMetaCiclo}m</span>
+                      <span className="block whitespace-nowrap">Total volta: {Math.round(segundosEstudadosTotal / 60)}m</span>
                     </span>
                   )}
 

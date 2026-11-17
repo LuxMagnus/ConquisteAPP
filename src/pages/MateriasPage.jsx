@@ -151,7 +151,7 @@ export function MateriasPage() {
     <div className="space-y-6 animate-in fade-in duration-150">
       {/* Top Header da Página */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-[#1d2c4c]">
-        <div>
+        <div className="min-w-0">
           <span className="text-xs font-bold uppercase tracking-wider text-blue-400">
             Planejamento & Edital
           </span>
@@ -164,14 +164,14 @@ export function MateriasPage() {
         </div>
 
         {/* Ações Globais */}
-        <div className="flex items-center gap-2 w-full sm:w-auto">
+        <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto sm:shrink-0">
           <Button
             variant="outline"
             size="sm"
             icon={Sparkles}
             onClick={() => setModalImportarOpen(true)}
             disabled={!provaAtiva}
-            className="flex-1 sm:flex-none justify-center text-xs text-blue-300 border-blue-500/40 hover:border-blue-400 bg-blue-500/10 hover:bg-blue-500/20 font-semibold"
+            className="flex-1 sm:flex-none min-w-[9.5rem] justify-center text-xs text-blue-300 border-blue-500/40 hover:border-blue-400 bg-blue-500/10 hover:bg-blue-500/20 font-semibold"
             title="Importar e estruturar conteúdo programático usando a IA do Gemini"
           >
             Importar com IA
@@ -183,7 +183,7 @@ export function MateriasPage() {
             icon={Plus}
             onClick={handleOpenNovaDisciplina}
             disabled={!provaAtiva}
-            className="flex-1 sm:flex-none justify-center text-xs font-bold"
+            className="flex-1 sm:flex-none min-w-[9.5rem] justify-center text-xs font-bold"
           >
             Nova Disciplina
           </Button>

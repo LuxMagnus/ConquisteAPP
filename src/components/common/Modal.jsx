@@ -39,24 +39,35 @@ export function Modal({
 
       {/* Modal Dialog Content */}
       <div
-        className={`relative w-full ${maxWidth} bg-[#121c33] border border-[#1e2f52] rounded-t-3xl sm:rounded-2xl shadow-2xl shadow-black/60 z-10 overflow-hidden flex flex-col max-h-[90vh] sm:max-h-[85vh] animate-in slide-in-from-bottom-6 duration-200`}
+        className={`relative w-full ${maxWidth} bg-[#121c33] border border-[#1e2f52] rounded-t-3xl sm:rounded-2xl shadow-2xl shadow-black/60 z-10 overflow-hidden flex flex-col max-h-[90dvh] sm:max-h-[85dvh] animate-in slide-in-from-bottom-6 duration-200`}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header */}
-        <div className="flex items-start justify-between p-4 sm:p-5 border-b border-[#1d2c4c]">
-          <div className="pr-4">
-            {title && <h2 className="text-lg sm:text-xl font-bold text-white tracking-tight">{title}</h2>}
-            {description && <p className="text-xs sm:text-sm text-slate-400 mt-1">{description}</p>}
+        {/* Header (sem título: apenas botão de fechar flutuante, sem faixa vazia) */}
+        {title || description ? (
+          <div className="flex items-start justify-between p-4 sm:p-5 border-b border-[#1d2c4c]">
+            <div className="pr-4 min-w-0">
+              {title && <h2 className="text-lg sm:text-xl font-bold text-white tracking-tight">{title}</h2>}
+              {description && <p className="text-xs sm:text-sm text-slate-400 mt-1">{description}</p>}
+            </div>
+            <button
+              type="button"
+              onClick={onClose}
+              className="p-1.5 shrink-0 text-slate-400 hover:text-white bg-slate-800/40 hover:bg-slate-800 rounded-xl transition-colors cursor-pointer"
+              aria-label="Fechar modal"
+            >
+              <X className="w-5 h-5" />
+            </button>
           </div>
+        ) : (
           <button
             type="button"
             onClick={onClose}
-            className="p-1.5 text-slate-400 hover:text-white bg-slate-800/40 hover:bg-slate-800 rounded-xl transition-colors cursor-pointer"
+            className="absolute top-3 right-3 z-20 p-1.5 text-slate-300 hover:text-white bg-slate-900/70 hover:bg-slate-800 border border-[#1d2c4c] rounded-xl transition-colors cursor-pointer"
             aria-label="Fechar modal"
           >
             <X className="w-5 h-5" />
           </button>
-        </div>
+        )}
 
         {/* Body */}
         <div className="p-4 sm:p-6 overflow-y-auto space-y-4 text-slate-200 text-sm">
@@ -65,7 +76,7 @@ export function Modal({
 
         {/* Footer */}
         {footer && (
-          <div className="p-4 sm:p-5 border-t border-[#1d2c4c] bg-[#0d1629] flex items-center justify-end gap-3">
+          <div className="p-4 sm:p-5 pb-[max(1rem,env(safe-area-inset-bottom,0px))] border-t border-[#1d2c4c] bg-[#0d1629] flex flex-wrap items-center justify-end gap-3">
             {footer}
           </div>
         )}

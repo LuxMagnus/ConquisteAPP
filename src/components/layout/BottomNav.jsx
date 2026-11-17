@@ -13,8 +13,8 @@ export function BottomNav({ currentTab, onChangeTab }) {
   const pendentesRevisoes = state.revisoes.filter((r) => r.status === 'pendente').length;
 
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#0d1527]/95 backdrop-blur-xl border-t border-[#1d2c4c] pb-safe">
-      <div className="flex items-center justify-between px-2 h-16 max-w-md mx-auto relative">
+    <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#0d1527]/95 backdrop-blur-xl border-t border-[#1d2c4c] pb-safe">
+      <div className="flex items-center justify-between px-2 h-16 max-w-lg mx-auto relative">
         {/* 1. Plano */}
         <button
           type="button"

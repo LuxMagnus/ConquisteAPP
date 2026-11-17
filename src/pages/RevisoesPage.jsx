@@ -115,7 +115,7 @@ export function RevisoesPage() {
                           {disc?.nome || 'Disciplina'}
                         </span>
                       </div>
-                      <h4 className="text-sm font-bold text-white mt-0.5 truncate">
+                      <h4 className="text-sm font-bold text-white mt-0.5 line-clamp-2 break-words">
                         {topico?.nome || 'Tópico de Estudo'}
                       </h4>
                       <p className="text-[11px] text-slate-400 mt-1 flex items-center gap-1.5">

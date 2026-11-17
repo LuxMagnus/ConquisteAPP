@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
+  --font-sans: 'Outfit', system-ui, -apple-system, sans-serif;
+  --font-mono: 'Quantico', monospace;
 
   --color-navy-950: #080d19;
   --color-navy-900: #0d1527;

@@ -132,7 +132,7 @@ export function dispararNotificacao(titulo, opcoes = {}) {
       body: opcoes.body || 'Seu bloco de estudos chegou ao fim.',
       icon: '/assets/aistudio/image_494e89eb.png',
       badge: '/assets/aistudio/image_494e89eb.png',
-      tag: 'estudaqui-sessao',
+      tag: 'conquiste-sessao',
       renotify: true,
       silent: false,
       ...opcoes,

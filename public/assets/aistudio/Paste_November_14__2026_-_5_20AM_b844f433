@@ -1,0 +1,504 @@
+diff --git a/package.json b/package.json
+index 58548ed..e263436 100644
+--- a/package.json
++++ b/package.json
+@@ -29,10 +29,12 @@
+     "motion": "^12.23.24",
+     "react": "^19.0.1",
+     "react-dom": "^19.0.1",
++    "react-is": "^19.3.1",
+     "recharts": "^3.10.1",
+     "vite": "^8.3.0"
+   },
+   "devDependencies": {
++    "@types/express": "^4.17.21",
+     "@types/node": "^22.14.0",
+     "@types/react": "^19.3.0",
+     "@types/react-dom": "^19.3.0",
+@@ -40,7 +42,6 @@
+     "esbuild": "^0.25.0",
+     "tailwindcss": "^4.3.3",
+     "tsx": "^4.21.0",
+-    "typescript": "^7.0.2",
+-    "@types/express": "^4.17.21"
++    "typescript": "^7.0.2"
+   }
+ }
+diff --git a/src/App.tsx b/src/App.tsx
+index 191c36c..cb4abc4 100644
+--- a/src/App.tsx
++++ b/src/App.tsx
+@@ -84,8 +84,8 @@ function MainApp() {
+   }
+ 
+   return (
+-    <div className="min-h-screen bg-[#0b1120] text-slate-100 flex flex-col md:flex-row antialiased">
+-      {/* Sidebar Lateral para Desktop (>= 768px) */}
++    <div className="min-h-screen bg-[#0b1120] text-slate-100 flex flex-col lg:flex-row antialiased">
++      {/* Sidebar Lateral para Desktop e tablet deitado (>= 1024px) */}
+       <Sidebar
+         currentTab={currentTab}
+         onChangeTab={setCurrentTab}
+@@ -94,7 +94,7 @@ function MainApp() {
+       />
+ 
+       {/* Conteúdo Principal */}
+-      <div className="flex-1 flex flex-col min-w-0 pb-28 md:pb-12">
++      <div className="flex-1 flex flex-col min-w-0 pb-28 lg:pb-12">
+         {/* Top Header */}
+         <Header
+           onOpenSettings={() => setIsSettingsOpen(true)}
+@@ -135,7 +135,7 @@ function MainApp() {
+         />
+       )}
+ 
+-      {/* Navegação Inferior Mobile (< 768px) */}
++      {/* Navegação Inferior Mobile e tablet em pé (< 1024px) */}
+       <BottomNav
+         currentTab={currentTab}
+         onChangeTab={setCurrentTab}
+@@ -156,7 +156,7 @@ function MainApp() {
+         onClose={() => setIsSettingsOpen(false)}
+       />
+ 
+-      {/* Modal Global de Assinatura & 60 Dias Grátis */}
++      {/* Modal Global de Assinatura & 14 Dias Grátis */}
+       <AssinaturaModal
+         isOpen={isAssinaturaOpen}
+         onClose={() => setIsAssinaturaOpen(false)}
+diff --git a/src/components/common/Modal.jsx b/src/components/common/Modal.jsx
+index ef44386..c58aff9 100644
+--- a/src/components/common/Modal.jsx
++++ b/src/components/common/Modal.jsx
+@@ -39,24 +39,35 @@ export function Modal({
+ 
+       {/* Modal Dialog Content */}
+       <div
+-        className={`relative w-full ${maxWidth} bg-[#121c33] border border-[#1e2f52] rounded-t-3xl sm:rounded-2xl shadow-2xl shadow-black/60 z-10 overflow-hidden flex flex-col max-h-[90vh] sm:max-h-[85vh] animate-in slide-in-from-bottom-6 duration-200`}
++        className={`relative w-full ${maxWidth} bg-[#121c33] border border-[#1e2f52] rounded-t-3xl sm:rounded-2xl shadow-2xl shadow-black/60 z-10 overflow-hidden flex flex-col max-h-[90dvh] sm:max-h-[85dvh] animate-in slide-in-from-bottom-6 duration-200`}
+         onClick={(e) => e.stopPropagation()}
+       >
+-        {/* Header */}
+-        <div className="flex items-start justify-between p-4 sm:p-5 border-b border-[#1d2c4c]">
+-          <div className="pr-4">
+-            {title && <h2 className="text-lg sm:text-xl font-bold text-white tracking-tight">{title}</h2>}
+-            {description && <p className="text-xs sm:text-sm text-slate-400 mt-1">{description}</p>}
++        {/* Header (sem título: apenas botão de fechar flutuante, sem faixa vazia) */}
++        {title || description ? (
++          <div className="flex items-start justify-between p-4 sm:p-5 border-b border-[#1d2c4c]">
++            <div className="pr-4 min-w-0">
++              {title && <h2 className="text-lg sm:text-xl font-bold text-white tracking-tight">{title}</h2>}
++              {description && <p className="text-xs sm:text-sm text-slate-400 mt-1">{description}</p>}
++            </div>
++            <button
++              type="button"
++              onClick={onClose}
++              className="p-1.5 shrink-0 text-slate-400 hover:text-white bg-slate-800/40 hover:bg-slate-800 rounded-xl transition-colors cursor-pointer"
++              aria-label="Fechar modal"
++            >
++              <X className="w-5 h-5" />
++            </button>
+           </div>
++        ) : (
+           <button
+             type="button"
+             onClick={onClose}
+-            className="p-1.5 text-slate-400 hover:text-white bg-slate-800/40 hover:bg-slate-800 rounded-xl transition-colors cursor-pointer"
++            className="absolute top-3 right-3 z-20 p-1.5 text-slate-300 hover:text-white bg-slate-900/70 hover:bg-slate-800 border border-[#1d2c4c] rounded-xl transition-colors cursor-pointer"
+             aria-label="Fechar modal"
+           >
+             <X className="w-5 h-5" />
+           </button>
+-        </div>
++        )}
+ 
+         {/* Body */}
+         <div className="p-4 sm:p-6 overflow-y-auto space-y-4 text-slate-200 text-sm">
+@@ -65,7 +76,7 @@ export function Modal({
+ 
+         {/* Footer */}
+         {footer && (
+-          <div className="p-4 sm:p-5 border-t border-[#1d2c4c] bg-[#0d1629] flex items-center justify-end gap-3">
++          <div className="p-4 sm:p-5 pb-[max(1rem,env(safe-area-inset-bottom,0px))] border-t border-[#1d2c4c] bg-[#0d1629] flex flex-wrap items-center justify-end gap-3">
+             {footer}
+           </div>
+         )}
+diff --git a/src/components/cronometro/CrossDeviceSessionBanner.jsx b/src/components/cronometro/CrossDeviceSessionBanner.jsx
+index 6b951d9..7fdda6b 100644
+--- a/src/components/cronometro/CrossDeviceSessionBanner.jsx
++++ b/src/components/cronometro/CrossDeviceSessionBanner.jsx
+@@ -60,9 +60,14 @@ export function CrossDeviceSessionBanner({
+     sessaoAtiva.modo === 'livre' &&
+     minutosDesdeHeartbeat >= 15;
+ 
++  // Sessão iniciada neste mesmo aparelho já é controlada pela barra flutuante e pela
++  // tela do cronômetro: o banner do topo só aparece para sessões de outro aparelho
++  // (ou quando o outro aparelho parou de responder), evitando controles duplicados.
++  if (!isFromOtherDevice && !possivelDescarregamentoLongo) return null;
++
+   return (
+-    <div className="w-full bg-gradient-to-r from-[#122244] via-[#0f1d3b] to-[#122040] border-b border-blue-500/30 px-3.5 py-2.5 sm:px-6 shadow-lg shadow-black/20">
+-      <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-2.5">
++    <div className="w-full px-3.5 sm:px-6 lg:px-8 pt-3">
++      <div className="max-w-7xl mx-auto bg-gradient-to-r from-[#122244] via-[#0f1d3b] to-[#122040] border border-blue-500/30 rounded-2xl px-3 py-2.5 sm:px-4 shadow-lg shadow-black/20 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-2.5">
+         {/* Lado Esquerdo: Identificação do Dispositivo de Origem e Matéria */}
+         <div className="flex items-center gap-3 min-w-0 w-full md:w-auto">
+           <div className="relative p-2 rounded-xl bg-blue-600/20 border border-blue-500/40 text-blue-400 shrink-0">
+diff --git a/src/components/cronometro/FloatingTimerBar.jsx b/src/components/cronometro/FloatingTimerBar.jsx
+index be4b4ba..14575b0 100644
+--- a/src/components/cronometro/FloatingTimerBar.jsx
++++ b/src/components/cronometro/FloatingTimerBar.jsx
+@@ -86,7 +86,7 @@ export function FloatingTimerBar({ onOpenTimerPage, onFinalizarSessao }) {
+   return (
+     <div
+       onClick={onOpenTimerPage}
+-      className="fixed bottom-18 md:bottom-6 right-3 left-3 md:left-auto md:right-6 md:w-96 z-40 bg-[#0d1629]/95 backdrop-blur-xl border border-[#203254] shadow-2xl shadow-black/80 rounded-2xl p-2.5 sm:p-3 transition-all duration-200 hover:border-blue-500/50 cursor-pointer group"
++      className="fixed bottom-[calc(4.5rem+env(safe-area-inset-bottom,0px))] lg:bottom-6 right-3 left-3 sm:left-auto sm:w-96 lg:right-6 z-40 bg-[#0d1629]/95 backdrop-blur-xl border border-[#203254] shadow-2xl shadow-black/80 rounded-2xl p-2.5 sm:p-3 transition-all duration-200 hover:border-blue-500/50 cursor-pointer group"
+       role="region"
+       aria-label="Barra flutuante de sessão de estudo"
+     >
+diff --git a/src/components/layout/BottomNav.jsx b/src/components/layout/BottomNav.jsx
+index ba57d0a..9a9be38 100644
+--- a/src/components/layout/BottomNav.jsx
++++ b/src/components/layout/BottomNav.jsx
+@@ -13,8 +13,8 @@ export function BottomNav({ currentTab, onChangeTab }) {
+   const pendentesRevisoes = state.revisoes.filter((r) => r.status === 'pendente').length;
+ 
+   return (
+-    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#0d1527]/95 backdrop-blur-xl border-t border-[#1d2c4c] pb-safe">
+-      <div className="flex items-center justify-between px-2 h-16 max-w-md mx-auto relative">
++    <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#0d1527]/95 backdrop-blur-xl border-t border-[#1d2c4c] pb-safe">
++      <div className="flex items-center justify-between px-2 h-16 max-w-lg mx-auto relative">
+         {/* 1. Plano */}
+         <button
+           type="button"
+diff --git a/src/components/layout/Header.jsx b/src/components/layout/Header.jsx
+index 7164533..a544c72 100644
+--- a/src/components/layout/Header.jsx
++++ b/src/components/layout/Header.jsx
+@@ -32,14 +32,29 @@ export function Header({ onOpenSettings, onOpenAssinatura }) {
+   } = useStudyStore();
+ 
+   const [isSyncModalOpen, setIsSyncModalOpen] = useState(false);
+-  const [bannerFechado, setBannerFechado] = useState(false);
++  const [bannerFechado, setBannerFechado] = useState(() => {
++    try {
++      return localStorage.getItem('conquiste:banner-nuvem-fechado') === '1';
++    } catch {
++      return false;
++    }
++  });
++
++  function fecharBanner() {
++    setBannerFechado(true);
++    try {
++      localStorage.setItem('conquiste:banner-nuvem-fechado', '1');
++    } catch {
++      /* armazenamento indisponível: apenas fecha nesta sessão */
++    }
++  }
+ 
+   return (
+     <>
+-      <header className="sticky top-0 z-30 w-full bg-[#0d1527]/90 backdrop-blur-md border-b border-[#1d2c4c] px-4 py-2.5 sm:px-6 pt-safe">
++      <header className="sticky top-0 z-30 w-full bg-[#0d1527]/90 backdrop-blur-md border-b border-[#1d2c4c] px-3.5 sm:px-6 lg:px-8 pb-2.5 pt-[max(0.625rem,env(safe-area-inset-top,0px))]">
+         <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
+           {/* Brand & Logo */}
+-          <div className="flex items-center gap-2.5">
++          <div className="flex items-center gap-2.5 min-w-0 lg:hidden">
+             <div className="relative shrink-0">
+               <img
+                 src="/assets/aistudio/Icone_afd7a14f.png"
+@@ -48,14 +63,14 @@ export function Header({ onOpenSettings, onOpenAssinatura }) {
+               />
+             </div>
+ 
+-            <div>
++            <div className="min-w-0">
+               <div className="flex items-center gap-1.5">
+                 <span className="text-base sm:text-lg font-extrabold tracking-tight text-white leading-tight">
+                   Conquiste
+                 </span>
+               </div>
+               {provaAtiva ? (
+-                <p className="text-[11px] text-slate-400 truncate max-w-[170px] sm:max-w-xs flex items-center gap-1">
++                <p className="text-[11px] text-slate-400 truncate max-w-[150px] min-[400px]:max-w-[190px] sm:max-w-xs flex items-center gap-1">
+                   <Target className="w-3 h-3 text-emerald-400 shrink-0" />
+                   <span className="truncate">{provaAtiva.nome}</span>
+                 </p>
+@@ -65,8 +80,16 @@ export function Header({ onOpenSettings, onOpenAssinatura }) {
+             </div>
+           </div>
+ 
++          {/* Concurso ativo (somente com sidebar, >= lg) */}
++          <div className="hidden lg:flex items-center gap-2 min-w-0 text-sm text-slate-300">
++            <Target className="w-4 h-4 text-emerald-400 shrink-0" />
++            <span className="truncate font-semibold">
++              {provaAtiva ? provaAtiva.nome : 'Nenhum concurso ativo'}
++            </span>
++          </div>
++
+           {/* Actions & Cloud Sync Status */}
+-          <div className="flex items-center gap-2">
++          <div className="flex items-center gap-2 shrink-0">
+             {/* Botão de Status da Nuvem / Sincronização */}
+             {currentUser ? (
+               <button
+@@ -172,35 +195,43 @@ export function Header({ onOpenSettings, onOpenAssinatura }) {
+           </div>
+         </div>
+ 
+-        {/* Banner de Aviso de Sincronização se não estiver logado */}
+-        {!currentUser && !bannerFechado && (
+-          <div className="max-w-7xl mx-auto mt-2 px-3 py-2 rounded-xl bg-blue-950/40 border border-blue-500/30 flex items-center justify-between gap-3 text-xs text-blue-200">
+-            <div className="flex items-center gap-2">
++      </header>
++
++      {/* Banner de Aviso de Sincronização (fora da barra fixa, para não roubar altura da tela) */}
++      {!currentUser && !bannerFechado && (
++        <div className="px-3.5 sm:px-6 lg:px-8 pt-3">
++          <div className="max-w-7xl mx-auto px-3 py-2 rounded-xl bg-blue-950/40 border border-blue-500/30 flex items-center justify-between gap-3 text-xs text-blue-200">
++            <div className="flex items-center gap-2 min-w-0">
+               <Cloud className="w-4 h-4 text-blue-400 shrink-0" />
+-              <span>
+-                Para acessar no <strong>computador</strong> e no <strong>celular</strong> com as mesmas matérias e cronômetro, conecte sua conta Google.
++              <span className="min-w-0">
++                <span className="sm:hidden">Conecte sua conta Google para sincronizar seus dados.</span>
++                <span className="hidden sm:inline">
++                  Para acessar no <strong>computador</strong> e no <strong>celular</strong> com as mesmas matérias e cronômetro, conecte sua conta Google.
++                </span>
+               </span>
+             </div>
+             <div className="flex items-center gap-2 shrink-0">
+               <button
+                 type="button"
+                 onClick={loginComGoogle}
+-                className="px-2.5 py-1 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-bold text-[11px] transition-all cursor-pointer shadow-sm"
++                className="px-2.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-bold text-[11px] transition-all cursor-pointer shadow-sm whitespace-nowrap"
+               >
+-                Conectar Agora
++                Conectar
+               </button>
+               <button
+                 type="button"
+-                onClick={() => setBannerFechado(true)}
+-                className="p-1 text-slate-400 hover:text-white rounded"
++                onClick={fecharBanner}
++                className="p-1.5 text-slate-400 hover:text-white rounded"
+                 title="Fechar aviso"
++                aria-label="Fechar aviso"
+               >
+-                <X className="w-3.5 h-3.5" />
++                <X className="w-4 h-4" />
+               </button>
+             </div>
+           </div>
+-        )}
+-      </header>
++        </div>
++      )}
++
+ 
+       {/* Modal detalhado de Sincronização em Nuvem */}
+       <SyncStatusModal
+diff --git a/src/components/layout/Sidebar.jsx b/src/components/layout/Sidebar.jsx
+index f31f23f..ce1cf7c 100644
+--- a/src/components/layout/Sidebar.jsx
++++ b/src/components/layout/Sidebar.jsx
+@@ -28,7 +28,7 @@ export function Sidebar({ currentTab, onChangeTab, onOpenSettings, onOpenAssinat
+   const totalDisciplinas = state.disciplinas.length;
+ 
+   return (
+-    <aside className="hidden md:flex flex-col w-64 lg:w-72 bg-[#0d1527] border-r border-[#1d2c4c] p-4 shrink-0 min-h-screen justify-between select-none">
++    <aside className="hidden lg:flex flex-col w-72 bg-[#0d1527] border-r border-[#1d2c4c] p-4 shrink-0 sticky top-0 h-screen overflow-y-auto no-scrollbar justify-between gap-6 select-none">
+       <div className="space-y-6">
+         {/* Brand */}
+         <div className="px-2 py-1">
+diff --git a/src/components/materias/MetasSemanaisCard.jsx b/src/components/materias/MetasSemanaisCard.jsx
+index 161e468..d29e6ac 100644
+--- a/src/components/materias/MetasSemanaisCard.jsx
++++ b/src/components/materias/MetasSemanaisCard.jsx
+@@ -105,7 +105,7 @@ export function MetasSemanaisCard({ onEditarProva, onNovaProva }) {
+                   </select>
+                 </div>
+               )}
+-              <h2 className="text-lg sm:text-xl font-extrabold text-white tracking-tight truncate">
++              <h2 className="text-lg sm:text-xl font-extrabold text-white tracking-tight line-clamp-2 break-words">
+                 {provaAtiva.nome}
+               </h2>
+             </div>
+@@ -117,9 +117,9 @@ export function MetasSemanaisCard({ onEditarProva, onNovaProva }) {
+         </div>
+ 
+         {/* Contagem Regressiva e Botões */}
+-        <div className="w-full">
++        <div className="w-full md:w-auto md:shrink-0">
+           {/* Badge de Contagem Regressiva em Dias */}
+-          <div className="px-3.5 py-3 rounded-xl bg-[#0b1222] border border-[#1e2f52] flex items-center gap-2">
++          <div className="px-3.5 py-3 rounded-xl bg-[#0b1222] border border-[#1e2f52] flex items-center justify-between md:justify-start gap-3 whitespace-nowrap">
+             <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
+               Contagem Regressiva
+             </span>
+diff --git a/src/components/monetizacao/AssinaturaModal.jsx b/src/components/monetizacao/AssinaturaModal.jsx
+index 5640bf0..fc34dab 100644
+--- a/src/components/monetizacao/AssinaturaModal.jsx
++++ b/src/components/monetizacao/AssinaturaModal.jsx
+@@ -125,7 +125,7 @@ export function AssinaturaModal({ isOpen, onClose, onOpenTermos }) {
+       description=""
+       maxWidth="max-w-xl"
+     >
+-      <div className="space-y-5 -mt-3">
++      <div className="space-y-5 pt-8">
+         {/* Banner Hero do Trial de 14 dias */}
+         <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-900/60 via-indigo-950/70 to-[#0d1629] border border-blue-500/40 p-5 text-center shadow-lg">
+           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/20 border border-blue-400/40 text-blue-300 text-xs font-bold uppercase tracking-wider mb-2.5">
+diff --git a/src/pages/CronometroPage.jsx b/src/pages/CronometroPage.jsx
+index 7e343e2..8ac1968 100644
+--- a/src/pages/CronometroPage.jsx
++++ b/src/pages/CronometroPage.jsx
+@@ -711,7 +711,7 @@ export function CronometroPage({ prefilledConfig, onClearPrefilled }) {
+                 </svg>
+ 
+                 {/* Conteúdo Central do Relógio */}
+-                <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none px-4">
++                <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none px-8">
+                   {/* Tempo Principal */}
+                   <span className="font-mono text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-wider drop-shadow-md">
+                     {!sessaoAtiva
+@@ -724,7 +724,7 @@ export function CronometroPage({ prefilledConfig, onClearPrefilled }) {
+                   </span>
+ 
+                   {/* Legenda do Timer e Status do Ciclo */}
+-                  <p className="text-[11px] uppercase tracking-widest font-semibold mt-1 text-slate-400">
++                  <p className="text-[10px] sm:text-[11px] uppercase tracking-wider sm:tracking-widest font-semibold mt-1 text-slate-400 text-center">
+                     {!sessaoAtiva
+                       ? modoEstudo === 'livre'
+                         ? 'Modo Livre (Ciclo)'
+@@ -745,8 +745,9 @@ export function CronometroPage({ prefilledConfig, onClearPrefilled }) {
+                   )}
+ 
+                   {blocoCicloAtual && (
+-                    <span className="text-[10px] text-slate-400/90 mt-1 font-mono">
+-                      Meta do ciclo: {minutosMetaCiclo}m • Total volta: {Math.round(segundosEstudadosTotal / 60)}m
++                    <span className="text-[10px] text-slate-400/90 mt-1 font-mono text-center leading-snug">
++                      <span className="block whitespace-nowrap">Meta do ciclo: {minutosMetaCiclo}m</span>
++                      <span className="block whitespace-nowrap">Total volta: {Math.round(segundosEstudadosTotal / 60)}m</span>
+                     </span>
+                   )}
+ 
+diff --git a/src/pages/EstatisticasPage.jsx b/src/pages/EstatisticasPage.jsx
+index f48f8aa..a37ec21 100644
+--- a/src/pages/EstatisticasPage.jsx
++++ b/src/pages/EstatisticasPage.jsx
+@@ -247,12 +247,12 @@ export function EstatisticasPage() {
+         {temSessoes && (
+           <div className="flex flex-wrap items-center gap-2.5 pt-2">
+             {/* Seletor de Período Temporal */}
+-            <div className="flex items-center gap-1.5 bg-[#121c33] px-2.5 py-1.5 rounded-xl border border-[#1d2c4c]">
++            <div className="flex items-center gap-1.5 bg-[#121c33] px-2.5 py-1.5 rounded-xl border border-[#1d2c4c] w-full sm:w-auto">
+               <Calendar className="w-3.5 h-3.5 text-blue-400 shrink-0" />
+               <select
+                 value={filtroPeriodo}
+                 onChange={(e) => setFiltroPeriodo(e.target.value)}
+-                className="bg-transparent text-xs font-semibold text-slate-200 focus:outline-none cursor-pointer pr-1"
++                className="w-full sm:w-auto bg-transparent text-xs font-semibold text-slate-200 focus:outline-none cursor-pointer pr-1"
+                 aria-label="Filtrar por período temporal"
+               >
+                 <option value="tudo" className="bg-[#0b1120] text-white">Todo o Histórico</option>
+@@ -287,7 +287,7 @@ export function EstatisticasPage() {
+             )}
+ 
+             {/* Filtro por Disciplina */}
+-            <div className="flex items-center gap-1.5 bg-[#121c33] px-2.5 py-1.5 rounded-xl border border-[#1d2c4c] max-w-xs">
++            <div className="flex items-center gap-1.5 bg-[#121c33] px-2.5 py-1.5 rounded-xl border border-[#1d2c4c] w-full sm:w-auto sm:max-w-xs">
+               <Filter className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+               <select
+                 value={filtroDisciplinaId}
+@@ -326,11 +326,11 @@ export function EstatisticasPage() {
+             </div>
+             
+             {/* Filtro Acertos no Chute */}
+-            <div className="flex items-center gap-1.5 bg-[#121c33] px-3 py-1.5 rounded-xl border border-[#1d2c4c]">
++            <div className="flex items-center gap-1.5 bg-[#121c33] px-3 py-1.5 rounded-xl border border-[#1d2c4c] w-full sm:w-auto">
+               <select
+                 value={filtroChutes}
+                 onChange={(e) => setFiltroChutes(e.target.value)}
+-                className="bg-transparent text-[11px] font-semibold text-slate-300 focus:outline-none cursor-pointer pr-1"
++                className="w-full sm:w-auto bg-transparent text-[11px] font-semibold text-slate-300 focus:outline-none cursor-pointer pr-1"
+                 aria-label="Filtrar acertos no chute"
+               >
+                 <option value="nenhum">Considerar todos acertos</option>
+diff --git a/src/pages/MateriasPage.jsx b/src/pages/MateriasPage.jsx
+index e4c80d1..c8424b8 100644
+--- a/src/pages/MateriasPage.jsx
++++ b/src/pages/MateriasPage.jsx
+@@ -151,7 +151,7 @@ export function MateriasPage() {
+     <div className="space-y-6 animate-in fade-in duration-150">
+       {/* Top Header da Página */}
+       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-[#1d2c4c]">
+-        <div>
++        <div className="min-w-0">
+           <span className="text-xs font-bold uppercase tracking-wider text-blue-400">
+             Planejamento & Edital
+           </span>
+@@ -164,14 +164,14 @@ export function MateriasPage() {
+         </div>
+ 
+         {/* Ações Globais */}
+-        <div className="flex items-center gap-2 w-full sm:w-auto">
++        <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto sm:shrink-0">
+           <Button
+             variant="outline"
+             size="sm"
+             icon={Sparkles}
+             onClick={() => setModalImportarOpen(true)}
+             disabled={!provaAtiva}
+-            className="flex-1 sm:flex-none justify-center text-xs text-blue-300 border-blue-500/40 hover:border-blue-400 bg-blue-500/10 hover:bg-blue-500/20 font-semibold"
++            className="flex-1 sm:flex-none min-w-[9.5rem] justify-center text-xs text-blue-300 border-blue-500/40 hover:border-blue-400 bg-blue-500/10 hover:bg-blue-500/20 font-semibold"
+             title="Importar e estruturar conteúdo programático usando a IA do Gemini"
+           >
+             Importar com IA
+@@ -183,7 +183,7 @@ export function MateriasPage() {
+             icon={Plus}
+             onClick={handleOpenNovaDisciplina}
+             disabled={!provaAtiva}
+-            className="flex-1 sm:flex-none justify-center text-xs font-bold"
++            className="flex-1 sm:flex-none min-w-[9.5rem] justify-center text-xs font-bold"
+           >
+             Nova Disciplina
+           </Button>
+diff --git a/src/pages/PlanoPage.jsx b/src/pages/PlanoPage.jsx
+index 0d26883..9d62686 100644
+--- a/src/pages/PlanoPage.jsx
++++ b/src/pages/PlanoPage.jsx
+@@ -312,7 +312,7 @@ export function PlanoPage({ onSwitchToTimer }) {
+               {/* Card do Gráfico de Rosca */}
+               <Card className="bg-gradient-to-br from-[#121c33] to-[#0f172a] border-[#1f2f54] shadow-xl">
+                 <CardHeader className="flex flex-row items-center justify-between pb-2">
+-                  <div>
++                  <div className="min-w-0">
+                     <CardTitle className="text-base sm:text-lg flex items-center gap-2">
+                       <span>Ciclo de Estudos — Volta {cicloAtivo?.voltaAtual || 1}</span>
+                     </CardTitle>
+@@ -321,7 +321,7 @@ export function PlanoPage({ onSwitchToTimer }) {
+                     </CardDescription>
+                   </div>
+ 
+-                  <span className="text-xs font-mono font-bold px-3 py-1 rounded-xl bg-blue-600/20 text-blue-300 border border-blue-500/30">
++                  <span className="shrink-0 whitespace-nowrap self-start text-xs font-mono font-bold px-3 py-1 rounded-xl bg-blue-600/20 text-blue-300 border border-blue-500/30">
+                     {progressoCiclo.percentual}% da volta
+                   </span>
+                 </CardHeader>
+diff --git a/src/pages/RevisoesPage.jsx b/src/pages/RevisoesPage.jsx
+index 01ea6e8..fc09445 100644
+--- a/src/pages/RevisoesPage.jsx
++++ b/src/pages/RevisoesPage.jsx
+@@ -115,7 +115,7 @@ export function RevisoesPage() {
+                           {disc?.nome || 'Disciplina'}
+                         </span>
+                       </div>
+-                      <h4 className="text-sm font-bold text-white mt-0.5 truncate">
++                      <h4 className="text-sm font-bold text-white mt-0.5 line-clamp-2 break-words">
+                         {topico?.nome || 'Tópico de Estudo'}
+                       </h4>
+                       <p className="text-[11px] text-slate-400 mt-1 flex items-center gap-1.5">

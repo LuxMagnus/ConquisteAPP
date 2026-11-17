@@ -98,7 +98,7 @@ export function exportarSessoesCSV(sessoes = [], disciplinas = [], topicos = [],
   });
 
   const hojeStr = new Date().toISOString().slice(0, 10);
-  downloadFile(csv, `estudaqui-sessoes-${hojeStr}.csv`, 'text/csv;charset=utf-8;');
+  downloadFile(csv, `conquiste-sessoes-${hojeStr}.csv`, 'text/csv;charset=utf-8;');
 }
 
 /**
@@ -147,7 +147,7 @@ export function exportarResumoDisciplinasCSV(disciplinas = [], sessoes = []) {
   });
 
   const hojeStr = new Date().toISOString().slice(0, 10);
-  downloadFile(csv, `estudaqui-resumo-disciplinas-${hojeStr}.csv`, 'text/csv;charset=utf-8;');
+  downloadFile(csv, `conquiste-resumo-disciplinas-${hojeStr}.csv`, 'text/csv;charset=utf-8;');
 }
 
 /**
@@ -156,5 +156,5 @@ export function exportarResumoDisciplinasCSV(disciplinas = [], sessoes = []) {
 export function exportarEstatisticasJSON(dados = {}) {
   const jsonStr = JSON.stringify(dados, null, 2);
   const hojeStr = new Date().toISOString().slice(0, 10);
-  downloadFile(jsonStr, `estudaqui-backup-estatisticas-${hojeStr}.json`, 'application/json;charset=utf-8;');
+  downloadFile(jsonStr, `conquiste-backup-estatisticas-${hojeStr}.json`, 'application/json;charset=utf-8;');
 }

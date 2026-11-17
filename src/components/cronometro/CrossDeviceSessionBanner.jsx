@@ -60,9 +60,14 @@ export function CrossDeviceSessionBanner({
     sessaoAtiva.modo === 'livre' &&
     minutosDesdeHeartbeat >= 15;
 
+  // Sessão iniciada neste mesmo aparelho já é controlada pela barra flutuante e pela
+  // tela do cronômetro: o banner do topo só aparece para sessões de outro aparelho
+  // (ou quando o outro aparelho parou de responder), evitando controles duplicados.
+  if (!isFromOtherDevice && !possivelDescarregamentoLongo) return null;
+
   return (
-    <div className="w-full bg-gradient-to-r from-[#122244] via-[#0f1d3b] to-[#122040] border-b border-blue-500/30 px-3.5 py-2.5 sm:px-6 shadow-lg shadow-black/20">
-      <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-2.5">
+    <div className="w-full px-3.5 sm:px-6 lg:px-8 pt-3">
+      <div className="max-w-7xl mx-auto bg-gradient-to-r from-[#122244] via-[#0f1d3b] to-[#122040] border border-blue-500/30 rounded-2xl px-3 py-2.5 sm:px-4 shadow-lg shadow-black/20 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-2.5">
         {/* Lado Esquerdo: Identificação do Dispositivo de Origem e Matéria */}
         <div className="flex items-center gap-3 min-w-0 w-full md:w-auto">
           <div className="relative p-2 rounded-xl bg-blue-600/20 border border-blue-500/40 text-blue-400 shrink-0">

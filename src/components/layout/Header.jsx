@@ -32,14 +32,29 @@ export function Header({ onOpenSettings, onOpenAssinatura }) {
   } = useStudyStore();
 
   const [isSyncModalOpen, setIsSyncModalOpen] = useState(false);
-  const [bannerFechado, setBannerFechado] = useState(false);
+  const [bannerFechado, setBannerFechado] = useState(() => {
+    try {
+      return localStorage.getItem('conquiste:banner-nuvem-fechado') === '1';
+    } catch {
+      return false;
+    }
+  });
+
+  function fecharBanner() {
+    setBannerFechado(true);
+    try {
+      localStorage.setItem('conquiste:banner-nuvem-fechado', '1');
+    } catch {
+      /* armazenamento indisponível: apenas fecha nesta sessão */
+    }
+  }
 
   return (
     <>
-      <header className="sticky top-0 z-30 w-full bg-[#0d1527]/90 backdrop-blur-md border-b border-[#1d2c4c] px-4 py-2.5 sm:px-6 pt-safe">
+      <header className="sticky top-0 z-30 w-full bg-[#0d1527]/90 backdrop-blur-md border-b border-[#1d2c4c] px-3.5 sm:px-6 lg:px-8 pb-2.5 pt-[max(0.625rem,env(safe-area-inset-top,0px))]">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
           {/* Brand & Logo */}
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2.5 min-w-0 lg:hidden">
             <div className="relative shrink-0">
               <img
                 src="/assets/aistudio/Icone_afd7a14f.png"
@@ -48,14 +63,14 @@ export function Header({ onOpenSettings, onOpenAssinatura }) {
               />
             </div>
 
-            <div>
+            <div className="min-w-0">
               <div className="flex items-center gap-1.5">
                 <span className="text-base sm:text-lg font-extrabold tracking-tight text-white leading-tight">
                   Conquiste
                 </span>
               </div>
               {provaAtiva ? (
-                <p className="text-[11px] text-slate-400 truncate max-w-[170px] sm:max-w-xs flex items-center gap-1">
+                <p className="text-[11px] text-slate-400 truncate max-w-[150px] min-[400px]:max-w-[190px] sm:max-w-xs flex items-center gap-1">
                   <Target className="w-3 h-3 text-emerald-400 shrink-0" />
                   <span className="truncate">{provaAtiva.nome}</span>
                 </p>
@@ -65,8 +80,16 @@ export function Header({ onOpenSettings, onOpenAssinatura }) {
             </div>
           </div>
 
+          {/* Concurso ativo (somente com sidebar, >= lg) */}
+          <div className="hidden lg:flex items-center gap-2 min-w-0 text-sm text-slate-300">
+            <Target className="w-4 h-4 text-emerald-400 shrink-0" />
+            <span className="truncate font-semibold">
+              {provaAtiva ? provaAtiva.nome : 'Nenhum concurso ativo'}
+            </span>
+          </div>
+
           {/* Actions & Cloud Sync Status */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 shrink-0">
             {/* Botão de Status da Nuvem / Sincronização */}
             {currentUser ? (
               <button
@@ -172,35 +195,42 @@ export function Header({ onOpenSettings, onOpenAssinatura }) {
           </div>
         </div>
 
-        {/* Banner de Aviso de Sincronização se não estiver logado */}
-        {!currentUser && !bannerFechado && (
-          <div className="max-w-7xl mx-auto mt-2 px-3 py-2 rounded-xl bg-blue-950/40 border border-blue-500/30 flex items-center justify-between gap-3 text-xs text-blue-200">
-            <div className="flex items-center gap-2">
+      </header>
+
+      {/* Banner de Aviso de Sincronização (fora da barra fixa, para não roubar altura da tela) */}
+      {!currentUser && !bannerFechado && (
+        <div className="px-3.5 sm:px-6 lg:px-8 pt-3">
+          <div className="max-w-7xl mx-auto px-3 py-2 rounded-xl bg-blue-950/40 border border-blue-500/30 flex items-center justify-between gap-3 text-xs text-blue-200">
+            <div className="flex items-center gap-2 min-w-0">
               <Cloud className="w-4 h-4 text-blue-400 shrink-0" />
-              <span>
-                Para acessar no <strong>computador</strong> e no <strong>celular</strong> com as mesmas matérias e cronômetro, conecte sua conta Google.
+              <span className="min-w-0">
+                <span className="sm:hidden">Conecte sua conta Google para sincronizar seus dados.</span>
+                <span className="hidden sm:inline">
+                  Para acessar no <strong>computador</strong> e no <strong>celular</strong> com as mesmas matérias e cronômetro, conecte sua conta Google.
+                </span>
               </span>
             </div>
             <div className="flex items-center gap-2 shrink-0">
               <button
                 type="button"
                 onClick={loginComGoogle}
-                className="px-2.5 py-1 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-bold text-[11px] transition-all cursor-pointer shadow-sm"
+                className="px-2.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-bold text-[11px] transition-all cursor-pointer shadow-sm whitespace-nowrap"
               >
-                Conectar Agora
+                Conectar
               </button>
               <button
                 type="button"
-                onClick={() => setBannerFechado(true)}
-                className="p-1 text-slate-400 hover:text-white rounded"
+                onClick={fecharBanner}
+                className="p-1.5 text-slate-400 hover:text-white rounded"
                 title="Fechar aviso"
+                aria-label="Fechar aviso"
               >
-                <X className="w-3.5 h-3.5" />
+                <X className="w-4 h-4" />
               </button>
             </div>
           </div>
-        )}
-      </header>
+        </div>
+      )}
 
       {/* Modal detalhado de Sincronização em Nuvem */}
       <SyncStatusModal

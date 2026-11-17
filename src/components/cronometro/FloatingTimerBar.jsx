@@ -86,7 +86,7 @@ export function FloatingTimerBar({ onOpenTimerPage, onFinalizarSessao }) {
   return (
     <div
       onClick={onOpenTimerPage}
-      className="fixed bottom-18 md:bottom-6 right-3 left-3 md:left-auto md:right-6 md:w-96 z-40 bg-[#0d1629]/95 backdrop-blur-xl border border-[#203254] shadow-2xl shadow-black/80 rounded-2xl p-2.5 sm:p-3 transition-all duration-200 hover:border-blue-500/50 cursor-pointer group"
+      className="fixed bottom-[calc(4.5rem+env(safe-area-inset-bottom,0px))] lg:bottom-6 right-3 left-3 sm:left-auto sm:w-96 lg:right-6 z-40 bg-[#0d1629]/95 backdrop-blur-xl border border-[#203254] shadow-2xl shadow-black/80 rounded-2xl p-2.5 sm:p-3 transition-all duration-200 hover:border-blue-500/50 cursor-pointer group"
       role="region"
       aria-label="Barra flutuante de sessão de estudo"
     >

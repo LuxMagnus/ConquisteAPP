@@ -28,7 +28,7 @@ export function Sidebar({ currentTab, onChangeTab, onOpenSettings, onOpenAssinat
   const totalDisciplinas = state.disciplinas.length;
 
   return (
-    <aside className="hidden md:flex flex-col w-64 lg:w-72 bg-[#0d1527] border-r border-[#1d2c4c] p-4 shrink-0 min-h-screen justify-between select-none">
+    <aside className="hidden lg:flex flex-col w-72 bg-[#0d1527] border-r border-[#1d2c4c] p-4 shrink-0 sticky top-0 h-screen overflow-y-auto no-scrollbar justify-between gap-6 select-none">
       <div className="space-y-6">
         {/* Brand */}
         <div className="px-2 py-1">
@@ -170,12 +170,6 @@ export function Sidebar({ currentTab, onChangeTab, onOpenSettings, onOpenAssinat
             <p className="text-[10px] text-slate-500 font-normal">Chave Gemini, Import/Export</p>
           </div>
         </button>
-
-        <div className="px-2 text-center">
-          <p className="text-[10px] text-slate-500">
-            Fase 0 — Fundação Estudaqui
-          </p>
-        </div>
       </div>
     </aside>
   );
